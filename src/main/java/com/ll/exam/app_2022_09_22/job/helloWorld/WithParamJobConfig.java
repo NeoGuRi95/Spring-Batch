@@ -2,6 +2,7 @@ package com.ll.exam.app_2022_09_22.job.helloWorld;
 
 import jdk.jfr.StackTrace;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
+@Slf4j
 public class WithParamJobConfig {
     private final JobBuilderFactory jobBuilderFactory;
 
@@ -43,10 +45,10 @@ public class WithParamJobConfig {
 
     @Bean
     @StepScope
-    public Tasklet withParamTasklet(@Value("#{jobParameters[name]}") String name,
-                                    @Value("#{jobParameters[age]}") int age) {
+    public Tasklet withParamTasklet(@Value("#{jobParameters['name']}") String name,
+                                    @Value("#{jobParameters['age']}") Long age) {
         return (contribution, chunkContext) -> {
-            System.out.printf("with Parameter Job\n(name: \"%s\", age: %d)\n".formatted(name, age));
+            log.debug("name: {}, age: {}", name, age);
 
             return RepeatStatus.FINISHED;
         };
